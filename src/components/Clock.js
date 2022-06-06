@@ -6,19 +6,19 @@ const Clock = ({}) => {
   const [timer, setTimer] = useState(0);
   const [started, setStarted] = useState(false);
 
-  useEffect(() => {
-    if (started) {
-      return;
-    }
-    let interval = setInterval(() => {
-      setTimer(t => t + 1);
-      //   console.log('s');
-    }, 1000);
+  // useEffect(() => {
+  //   if (started) {
+  //     return;
+  //   }
+  //   let interval = setInterval(() => {
+  //     setTimer(t => t + 1);
+  //     //   console.log('s');
+  //   }, 1000);
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, [started]);
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, [started]);
 
   function intToTime(int) {
     let hour = Number.parseInt(int / 60);
@@ -60,13 +60,12 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     justifyContent: 'center',
-    backgroundColor: 'red',
   },
   buttonContainer: {
     display: 'flex',
     justifyContent: 'space-around',
     flexDirection: 'row',
-    marginTop: 10,
+    marginTop: 30,
   },
   clock: {
     display: 'flex',

@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
-import MyButton from '../components/MyButon';
+import MyButton from '../components/MyButton';
 
 const MainPage = ({navigation}) => {
   return (

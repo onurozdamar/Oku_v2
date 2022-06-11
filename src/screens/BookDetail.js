@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, FlatList} from 'react-native';
+import React from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 import MyButton from '../components/MyButton';
 
 const Row = ({info, text}) => (
@@ -25,7 +25,15 @@ const BookDetail = ({navigation, route}) => {
       </View>
       <View style={styles.buttons}>
         <MyButton style={styles.button} text={'Oku'} onPress={() => {}} />
-        <MyButton style={styles.button} text={'Geçmiş'} onPress={() => {}} />
+        <MyButton
+          style={styles.button}
+          text={'Geçmiş'}
+          onPress={() => {
+            navigation.navigate('Okuma Geçmişi', {
+              data: {history: data.history, bookName: data.name},
+            });
+          }}
+        />
       </View>
     </View>
   );

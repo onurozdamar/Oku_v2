@@ -3,9 +3,10 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Home from './screens/Home';
 import BookDetail from './screens/BookDetail';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useDispatch} from 'react-redux';
+import BookHistory from './screens/BookHistory';
 
 const Stack = createStackNavigator();
 
@@ -34,14 +35,7 @@ export default function App() {
           options={{header: () => {}}}
         />
         <Stack.Screen name="Kitap Detayı" component={BookDetail} />
-        {/* <Stack.Screen name="Detail" component={Detail} />
-        <Stack.Screen
-          name="Görev Güncelle"
-          component={AddGorev}
-          options={{
-            headerRight: () => <Menu />,
-          }}
-        /> */}
+        <Stack.Screen name="Okuma Geçmişi" component={BookHistory} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -2,6 +2,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Home from './screens/Home';
+import BookDetail from './screens/BookDetail';
 import {Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useDispatch} from 'react-redux';
@@ -32,6 +33,7 @@ export default function App() {
           component={Home}
           options={{header: () => {}}}
         />
+        <Stack.Screen name="Kitap Detayı" component={BookDetail} />
         {/* <Stack.Screen name="Detail" component={Detail} />
         <Stack.Screen
           name="Görev Güncelle"

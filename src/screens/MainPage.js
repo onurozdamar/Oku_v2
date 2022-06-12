@@ -1,17 +1,18 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
 import MyButton from '../components/MyButton';
 
 const MainPage = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <MyButton text={'Kitap Oku'} />
-        <MyButton text={'Kitaplarım'} />
-      </View>
-      <View style={styles.row}>
         <MyButton text={'Kitap Ekle'} />
-        <MyButton text={'Okunan Kitaplar'} />
+        <MyButton
+          text={'Okunan Kitaplar'}
+          onPress={() => {
+            navigation.navigate('Okunan Kitaplar');
+          }}
+        />
       </View>
       <View style={styles.row}>
         <MyButton text={'Yazarlar'} />

@@ -1,11 +1,28 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+
+const colors = [
+  '#E3FCBF9d',
+  '#E3FCBF',
+  '#B8F1B063',
+  '#B8F1B09d',
+  '#B8F1B0',
+  '#00ffaa63',
+  '#00ffaa9d',
+  '#00ffaa',
+];
 
 export default function BookCard(props) {
   const {data, onPress} = props;
 
+  const Color = () => {
+    return colors[Math.floor((data?.currentPage / data?.page || 0) * 8)];
+  };
+
   return (
-    <TouchableOpacity style={{...styles.card}} onPress={onPress}>
+    <TouchableOpacity
+      style={{...styles.card, backgroundColor: Color()}}
+      onPress={onPress}>
       <View style={styles.row}>
         <View style={styles.left}>
           <Text style={styles.info}>Kitap Adı:</Text>
@@ -32,7 +49,7 @@ export default function BookCard(props) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: 'rgb(151,251,155)',
+    // backgroundColor: 'rgb(151,251,155)',
     padding: 5,
     margin: 5,
     marginTop: 0,

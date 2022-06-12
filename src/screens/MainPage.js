@@ -26,7 +26,12 @@ const MainPage = ({navigation}) => {
             navigation.navigate('Yazarlar');
           }}
         />
-        <MyButton text={'İstatistikler'} />
+        <MyButton
+          text={'İstatistikler'}
+          onPress={() => {
+            navigation.navigate('İstatistikler');
+          }}
+        />
       </View>
     </View>
   );

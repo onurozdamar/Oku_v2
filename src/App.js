@@ -12,6 +12,7 @@ import ReadingBooks from './screens/ReadingBooks';
 import AddBook from './screens/AddBook';
 import Authors from './screens/Authors';
 import AuthorsBooks from './screens/AuthorsBooks';
+import Statistics from './screens/Statistics';
 
 const Stack = createStackNavigator();
 
@@ -46,6 +47,7 @@ export default function App() {
         <Stack.Screen name="Kitap Ekle" component={AddBook} />
         <Stack.Screen name="Yazarlar" component={Authors} />
         <Stack.Screen name="Yazarın Kitapları" component={AuthorsBooks} />
+        <Stack.Screen name="İstatistikler" component={Statistics} />
       </Stack.Navigator>
     </NavigationContainer>
   );

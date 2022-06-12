@@ -8,12 +8,8 @@ const MyTextInput = ({label, value, onBlur, onChangeText}) => {
       <TextInput
         style={styles.input}
         value={value}
-        onBlur={() => {
-          onBlur && onBlur();
-        }}
-        onChangeText={() => {
-          onChangeText && onChangeText();
-        }}
+        onBlur={onBlur}
+        onChangeText={onChangeText}
       />
     </View>
   );

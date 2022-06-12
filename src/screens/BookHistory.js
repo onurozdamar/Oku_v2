@@ -31,7 +31,7 @@ const Row = ({navigation, data}) => {
             color={'green'}
             style={{}}
             onPress={() => {
-              //   navigation.navigate('Geçmişi Düzenle');
+              navigation.navigate('Geçmişi Düzenle', {data});
             }}
           />
           <IconButton

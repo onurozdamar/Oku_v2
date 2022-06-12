@@ -7,6 +7,7 @@ import {TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useDispatch} from 'react-redux';
 import BookHistory from './screens/BookHistory';
+import EditHistory from './screens/EditHistory';
 
 const Stack = createStackNavigator();
 
@@ -36,6 +37,7 @@ export default function App() {
         />
         <Stack.Screen name="Kitap Detayı" component={BookDetail} />
         <Stack.Screen name="Okuma Geçmişi" component={BookHistory} />
+        <Stack.Screen name="Geçmişi Düzenle" component={EditHistory} />
       </Stack.Navigator>
     </NavigationContainer>
   );

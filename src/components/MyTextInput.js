@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {StyleSheet, Text, View, TextInput} from 'react-native';
 
 const MyTextInput = ({label, value, onBlur, onChangeText}) => {
@@ -8,8 +8,12 @@ const MyTextInput = ({label, value, onBlur, onChangeText}) => {
       <TextInput
         style={styles.input}
         value={value}
-        onBlur={onBlur && onBlur()}
-        onChangeText={onChangeText && onChangeText()}
+        onBlur={() => {
+          onBlur && onBlur();
+        }}
+        onChangeText={() => {
+          onChangeText && onChangeText();
+        }}
       />
     </View>
   );

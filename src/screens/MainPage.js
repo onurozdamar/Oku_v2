@@ -20,7 +20,12 @@ const MainPage = ({navigation}) => {
         />
       </View>
       <View style={styles.row}>
-        <MyButton text={'Yazarlar'} />
+        <MyButton
+          text={'Yazarlar'}
+          onPress={() => {
+            navigation.navigate('Yazarlar');
+          }}
+        />
         <MyButton text={'İstatistikler'} />
       </View>
     </View>

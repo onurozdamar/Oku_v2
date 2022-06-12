@@ -10,6 +10,8 @@ import BookHistory from './screens/BookHistory';
 import EditHistory from './screens/EditHistory';
 import ReadingBooks from './screens/ReadingBooks';
 import AddBook from './screens/AddBook';
+import Authors from './screens/Authors';
+import AuthorsBooks from './screens/AuthorsBooks';
 
 const Stack = createStackNavigator();
 
@@ -42,6 +44,8 @@ export default function App() {
         <Stack.Screen name="Geçmişi Düzenle" component={EditHistory} />
         <Stack.Screen name="Okunan Kitaplar" component={ReadingBooks} />
         <Stack.Screen name="Kitap Ekle" component={AddBook} />
+        <Stack.Screen name="Yazarlar" component={Authors} />
+        <Stack.Screen name="Yazarın Kitapları" component={AuthorsBooks} />
       </Stack.Navigator>
     </NavigationContainer>
   );

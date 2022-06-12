@@ -6,7 +6,12 @@ const MainPage = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <MyButton text={'Kitap Ekle'} />
+        <MyButton
+          text={'Kitap Ekle'}
+          onPress={() => {
+            navigation.navigate('Kitap Ekle');
+          }}
+        />
         <MyButton
           text={'Okunan Kitaplar'}
           onPress={() => {

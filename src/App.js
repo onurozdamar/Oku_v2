@@ -9,6 +9,7 @@ import {useDispatch} from 'react-redux';
 import BookHistory from './screens/BookHistory';
 import EditHistory from './screens/EditHistory';
 import ReadingBooks from './screens/ReadingBooks';
+import AddBook from './screens/AddBook';
 
 const Stack = createStackNavigator();
 
@@ -40,6 +41,7 @@ export default function App() {
         <Stack.Screen name="Okuma Geçmişi" component={BookHistory} />
         <Stack.Screen name="Geçmişi Düzenle" component={EditHistory} />
         <Stack.Screen name="Okunan Kitaplar" component={ReadingBooks} />
+        <Stack.Screen name="Kitap Ekle" component={AddBook} />
       </Stack.Navigator>
     </NavigationContainer>
   );

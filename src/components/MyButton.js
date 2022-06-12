@@ -1,11 +1,10 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 
-const MyButton = ({onPress, text, style}) => {
+const MyButton = ({onPress, text, style, slim}) => {
   return (
     <TouchableOpacity
-      style={style ?? styles.container}
+      style={style ? style : slim ? styles.slim : styles.square}
       onPress={() => {
         console.log('c');
         onPress && onPress();
@@ -20,7 +19,7 @@ const MyButton = ({onPress, text, style}) => {
 export default MyButton;
 
 const styles = StyleSheet.create({
-  container: {
+  square: {
     display: 'flex',
     justifyContent: 'center',
     alignContent: 'center',
@@ -29,6 +28,14 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     borderRadius: 8,
+    color: 'black',
     backgroundColor: '#ecc02d',
+  },
+  slim: {
+    textAlign: 'center',
+    fontSize: 25,
+    color: 'black',
+    backgroundColor: '#ecc02d',
+    padding: 10,
   },
 });

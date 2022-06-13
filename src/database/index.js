@@ -55,7 +55,9 @@ export class BaseManager {
           'INSERT INTO Book (bookName, page, currentPage, addDate, type, authorId)' +
             `VALUES('${model.bookName}','${
               model.page
-            }','${0}','${new Date()}','${model.type}','${model.authorId}')`,
+            }','${0}','${new Date().toISOString()}','${model.type}','${
+              model.authorId
+            }')`,
         )
           .then(val => {
             resolve(val);
@@ -164,7 +166,7 @@ export class BaseManager {
       this.openDatabase().then(db => {
         db.executeSql(
           'INSERT INTO Author (authorName, addDate)' +
-            `VALUES('${model.authorName}','${new Date()}')`,
+            `VALUES('${model.authorName}','${new Date().toISOString()}')`,
         )
           .then(val => {
             resolve(val[0].insertId);
@@ -267,7 +269,9 @@ export class BaseManager {
       this.openDatabase().then(db => {
         db.executeSql(
           'INSERT INTO History (readDate, readTime, readPage, desc, bookId)' +
-            `VALUES('${model.readDate}','${model.readTime}','${model.readPage}','${model.desc}','${model.bookId}')`,
+            `VALUES('${model.readDate?.toISOString()}','${model.readTime}','${
+              model.readPage
+            }','${model.desc}','${model.bookId}')`,
         )
           .then(val => {
             resolve(val);

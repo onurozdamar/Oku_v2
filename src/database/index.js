@@ -125,6 +125,47 @@ export class BaseManager {
     });
   }
 
+  updateBook(model) {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          'UPDATE Book SET ' +
+            `bookName = '${model.bookName}',
+             page = '${model.page}',
+             currentPage = '${model.currentPage}',
+             addDate = '${model.addDate?.toISOString()}',
+             type = '${model.type}',
+             authorId = '${model.authorId}'
+             where bookId = ${model.bookId};`,
+        )
+          .then(val => {
+            resolve(true);
+          })
+          .catch(err => {
+            reject(false);
+          });
+      });
+    });
+  }
+
+  updateBookPage(bookId, currentPage) {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          'UPDATE Book SET ' +
+            `currentPage = '${currentPage}'
+             where bookId = ${bookId};`,
+        )
+          .then(val => {
+            resolve(true);
+          })
+          .catch(err => {
+            reject(false);
+          });
+      });
+    });
+  }
+
   deleteBook(id) {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {

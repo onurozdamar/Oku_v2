@@ -23,19 +23,18 @@ const ReadBook = ({navigation, route}) => {
   useEffect(() => {
     if (bookId) {
       manager.getBookById(bookId).then(res => {
-        setBook(res);
-        navigation.setParams({book: res});
+        updateBook(res);
       });
     } else {
       manager.getLastReadedBook().then(res => {
-        setBook(res);
-        navigation.setParams({book: res});
+        updateBook(res);
       });
     }
   }, [bookId]);
 
-  const isEmpty = obj => {
-    return Object.keys(obj).length === 0;
+  const updateBook = book => {
+    setBook(book);
+    navigation.setParams({book});
   };
 
   const validationSchema = Yup.object().shape({
@@ -67,13 +66,27 @@ const ReadBook = ({navigation, route}) => {
               readPage: values.readPage * 1,
               readDate: new Date(),
               readTime: 50,
-              bookId,
+              bookId: book.bookId,
+            });
+            manager.updateBookPage(
+              book.bookId,
+              book.currentPage + values.readPage * 1,
+            );
+            manager.getBookById(book.bookId).then(res => {
+              updateBook(res);
             });
             resetForm();
           }}
           validationSchema={validationSchema}
           enableReinitialize={true}>
-          {({handleChange, handleBlur, handleSubmit, values, errors}) => (
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            isValid,
+          }) => (
             <View>
               <MyTextInput
                 label={'Okunan Sayfa'}
@@ -94,7 +107,7 @@ const ReadBook = ({navigation, route}) => {
                 text={'Kaydet'}
                 slim
                 onPress={handleSubmit}
-                disabled={!book || !isEmpty(errors)}
+                disabled={!book || !isValid}
               />
             </View>
           )}

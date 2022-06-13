@@ -22,6 +22,9 @@ export class BaseManager {
     };
   }
 
+  //#region BOOK
+
+  // bookId, bookName, page, currentPage, addDate, type, authorId
   createBookTable() {
     return new Promise((resolve, reject) => {
       this.openDatabase()
@@ -45,43 +48,6 @@ export class BaseManager {
     });
   }
 
-  createAuthorTable() {
-    return new Promise((resolve, reject) => {
-      this.openDatabase().then(db => {
-        db.executeSql(
-          'CREATE TABLE IF NOT EXISTS Author (' +
-            'authorId INTEGER PRIMARY KEY NOT NULL ,' +
-            'authorName TEXT UNIQUE, addDate TEXT);',
-        )
-          .then(val => {
-            resolve(true);
-          })
-          .catch(err => {
-            reject(false);
-          });
-      });
-    });
-  }
-
-  createHistoryTable() {
-    return new Promise((resolve, reject) => {
-      this.openDatabase().then(db => {
-        db.executeSql(
-          'CREATE TABLE IF NOT EXISTS History (' +
-            'historyId INTEGER PRIMARY KEY NOT NULL ,' +
-            'readDate TEXT, readTime TEXT, readPage INTEGER, desc TEXT, ' +
-            'bookId INTEGER, FOREIGN KEY (bookId) REFERENCES Book (bookId));',
-        )
-          .then(val => {
-            resolve(true);
-          })
-          .catch(err => {
-            reject(false);
-          });
-      });
-    });
-  }
-
   addBook(model) {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
@@ -90,42 +56,6 @@ export class BaseManager {
             `VALUES('${model.bookName}','${
               model.page
             }','${0}','${new Date()}','${model.type}','${model.authorId}')`,
-        )
-          .then(val => {
-            resolve(val);
-          })
-          .catch(err => {
-            reject(err);
-          });
-      });
-    });
-  }
-
-  addAuthor(model) {
-    return new Promise((resolve, reject) => {
-      this.openDatabase().then(db => {
-        db.executeSql(
-          'INSERT INTO Author (authorName, addDate)' +
-            `VALUES('${model.authorName}','${new Date()}')`,
-        )
-          .then(val => {
-            console.log(val);
-            resolve(val[0].insertId);
-          })
-          .catch(err => {
-            console.log('err', err);
-            reject(err);
-          });
-      });
-    });
-  }
-
-  addHistory(model) {
-    return new Promise((resolve, reject) => {
-      this.openDatabase().then(db => {
-        db.executeSql(
-          'INSERT INTO History (readDate, readTime, readPage, desc, bookId)' +
-            `VALUES('${model.readDate}','${model.readTime}','${model.readPage}','${model.desc}','${model.bookId}')`,
         )
           .then(val => {
             resolve(val);
@@ -158,19 +88,12 @@ export class BaseManager {
     });
   }
 
-  getAuthors() {
+  getBookById(bookId) {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
-        db.executeSql('SELECT * FROM Author')
+        db.executeSql(`SELECT * FROM Book WHERE bookId=${bookId}`)
           .then(([values]) => {
-            var array = [];
-
-            for (let index = 0; index < values.rows.length; index++) {
-              const element = values.rows.item(index);
-              array.push(element);
-            }
-
-            resolve(array);
+            resolve(values.rows.item(0));
           })
           .catch(err => {
             reject(err);
@@ -179,10 +102,65 @@ export class BaseManager {
     });
   }
 
-  getHistories(bookId) {
+  deleteBook(id) {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
-        db.executeSql(`SELECT * FROM History WHERE bookId=${bookId}`)
+        db.executeSql('DELETE FROM Book where bookId=' + id)
+          .then(val => {
+            resolve(true);
+          })
+          .catch(err => {
+            reject(false);
+          });
+      });
+    });
+  }
+  //#endregion
+
+  //#region AUTHOR
+
+  // authorId, authorName, addDate
+  createAuthorTable() {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          'CREATE TABLE IF NOT EXISTS Author (' +
+            'authorId INTEGER PRIMARY KEY NOT NULL ,' +
+            'authorName TEXT UNIQUE, addDate TEXT);',
+        )
+          .then(val => {
+            resolve(true);
+          })
+          .catch(err => {
+            reject(false);
+          });
+      });
+    });
+  }
+
+  addAuthor(model) {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          'INSERT INTO Author (authorName, addDate)' +
+            `VALUES('${model.authorName}','${new Date()}')`,
+        )
+          .then(val => {
+            console.log(val);
+            resolve(val[0].insertId);
+          })
+          .catch(err => {
+            console.log('err', err);
+            reject(err);
+          });
+      });
+    });
+  }
+
+  getAuthors() {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql('SELECT * FROM Author')
           .then(([values]) => {
             var array = [];
 
@@ -214,6 +192,81 @@ export class BaseManager {
     });
   }
 
+  deleteAuthor(id) {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql('DELETE FROM Author where authorId=' + id)
+          .then(val => {
+            resolve(true);
+          })
+          .catch(err => {
+            reject(false);
+          });
+      });
+    });
+  }
+  //#endregion
+
+  //#region HISTORY
+
+  // historyId, readDate, readTime, readPage, desc, bookId
+  createHistoryTable() {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          'CREATE TABLE IF NOT EXISTS History (' +
+            'historyId INTEGER PRIMARY KEY NOT NULL ,' +
+            'readDate TEXT, readTime TEXT, readPage INTEGER, desc TEXT, ' +
+            'bookId INTEGER, FOREIGN KEY (bookId) REFERENCES Book (bookId));',
+        )
+          .then(val => {
+            resolve(true);
+          })
+          .catch(err => {
+            reject(false);
+          });
+      });
+    });
+  }
+
+  addHistory(model) {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          'INSERT INTO History (readDate, readTime, readPage, desc, bookId)' +
+            `VALUES('${model.readDate}','${model.readTime}','${model.readPage}','${model.desc}','${model.bookId}')`,
+        )
+          .then(val => {
+            resolve(val);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
+
+  getHistories(bookId) {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(`SELECT * FROM History WHERE bookId=${bookId}`)
+          .then(([values]) => {
+            var array = [];
+
+            for (let index = 0; index < values.rows.length; index++) {
+              const element = values.rows.item(index);
+              array.push(element);
+            }
+
+            resolve(array);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
+
   getLastReadByBook(bookId) {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
@@ -230,4 +283,36 @@ export class BaseManager {
       });
     });
   }
+
+  getLastReads() {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          `SELECT * FROM History GROUP BY bookId ORDER BY readDate ASC`,
+        )
+          .then(([values]) => {
+            console.log(values);
+            resolve(values.rows.item(0));
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
+
+  deleteHistory(id) {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql('DELETE FROM History where historyId=' + id)
+          .then(val => {
+            resolve(true);
+          })
+          .catch(err => {
+            reject(false);
+          });
+      });
+    });
+  }
+  //#endregion
 }

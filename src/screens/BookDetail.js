@@ -24,13 +24,21 @@ const BookDetail = ({navigation, route}) => {
         <Row info={'Son Okuma'} text={data.lastRead} />
       </View>
       <View style={styles.buttons}>
-        <MyButton style={styles.button} text={'Oku'} onPress={() => {}} />
+        <MyButton
+          style={styles.button}
+          text={'Oku'}
+          onPress={() => {
+            navigation.navigate('Kitap Oku', {
+              data: data.bookId,
+            });
+          }}
+        />
         <MyButton
           style={styles.button}
           text={'Geçmiş'}
           onPress={() => {
             navigation.navigate('Okuma Geçmişi', {
-              data: {history: data.history, bookName: data.name},
+              data,
             });
           }}
         />

@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, FlatList, TouchableOpacity} from 'react-native';
 import IconButton from '../components/IconButton';
+import {BaseManager} from '../database';
 
 const Row = ({navigation, data}) => {
   const [open, setOpen] = useState(false);
@@ -12,7 +13,7 @@ const Row = ({navigation, data}) => {
         setOpen(!open);
       }}>
       <View style={styles.row}>
-        <Text style={{fontSize: 18, flex: 1}}>{data.date}</Text>
+        <Text style={{fontSize: 18, flex: 1}}>{data.readDate}</Text>
         <Text style={styles.info}>{data.readTime}</Text>
         <Text style={styles.info}>{data.readPage}</Text>
       </View>
@@ -48,11 +49,20 @@ const Row = ({navigation, data}) => {
 };
 
 const BookHistory = ({navigation, route}) => {
-  const {history, bookName} = route?.params?.data;
-  console.log(history, bookName);
+  const data = route?.params?.data;
+  const manager = new BaseManager();
+
+  const [history, setHistory] = useState([]);
+
+  useEffect(() => {
+    manager.getHistories(data.bookId).then(res => {
+      setHistory(res);
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.bookName}>{bookName}</Text>
+      <Text style={styles.bookName}>{data.bookName}</Text>
       <View
         style={{
           display: 'flex',

@@ -26,7 +26,7 @@ export default function BookCard(props) {
       <View style={styles.row}>
         <View style={styles.left}>
           <Text style={styles.info}>Kitap Adı:</Text>
-          <Text style={styles.name}>{data?.name}</Text>
+          <Text style={styles.name}>{data?.bookName}</Text>
         </View>
         <View style={styles.right}>
           <Text style={{...styles.info, flex: 5}}>Toplam Sayfa:</Text>

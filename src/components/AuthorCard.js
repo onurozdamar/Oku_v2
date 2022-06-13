@@ -6,7 +6,7 @@ export default function AuthorCard(props) {
 
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
-      <Text style={styles.text}>{data?.author}</Text>
+      <Text style={styles.text}>{data?.authorName}</Text>
     </TouchableOpacity>
   );
 }

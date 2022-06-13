@@ -1,10 +1,14 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 
-const MyButton = ({onPress, text, style, slim}) => {
+const MyButton = ({onPress, text, style, slim, disabled}) => {
   return (
     <TouchableOpacity
-      style={style ? style : slim ? styles.slim : styles.square}
+      style={{
+        ...(style ? style : slim ? styles.slim : styles.square),
+        backgroundColor: disabled ? '#ecc02d63' : '#ecc02d',
+      }}
+      disabled={disabled}
       onPress={() => {
         console.log('c');
         onPress && onPress();

@@ -1,16 +1,17 @@
 import React from 'react';
 import {StyleSheet, Text, View, TextInput} from 'react-native';
 
-const MyTextInput = ({label, value, onBlur, onChangeText}) => {
+const MyTextInput = ({label, value, onBlur, onChangeText, error}) => {
   return (
     <View style={styles.inputContainer}>
       <Text style={styles.inputLabel}>{label}</Text>
       <TextInput
-        style={styles.input}
+        style={{...styles.input, borderColor: error ? 'red' : 'black'}}
         value={value}
         onBlur={onBlur}
         onChangeText={onChangeText}
       />
+      {error && <Text style={styles.error}>*{error}</Text>}
     </View>
   );
 };
@@ -34,5 +35,9 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontWeight: '500',
     fontSize: 20,
+  },
+  error: {
+    color: 'red',
+    marginLeft: 3,
   },
 });

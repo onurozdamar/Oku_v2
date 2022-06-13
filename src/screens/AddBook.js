@@ -1,21 +1,38 @@
 import {Formik} from 'formik';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import MyButton from '../components/MyButton';
 import MyPicker from '../components/MyPicker';
 import MyTextInput from '../components/MyTextInput';
+import {BaseManager} from '../database';
 
 const AddBook = ({navigation}) => {
+  const manager = new BaseManager();
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Formik
         initialValues={{
           bookName: '',
           page: '',
           authorName: '',
-          type: '',
+          type: 'kitap',
         }}
-        onSubmit={values => {}}
+        onSubmit={values => {
+          manager.getAuthorByName(values.authorName).then(author => {
+            if (author) {
+              values.authorId = author.authorId;
+              manager.addBook(values);
+            } else {
+              manager.addAuthor(values).then(authorId => {
+                values.authorId = authorId;
+                manager.addBook(values);
+              });
+            }
+          });
+
+          navigation.goBack();
+        }}
         enableReinitialize={true}>
         {({handleChange, handleBlur, handleSubmit, setFieldValue, values}) => (
           <View>
@@ -43,18 +60,18 @@ const AddBook = ({navigation}) => {
               label={'Tür'}
               value={values.type}
               items={[
-                {label: 'Kitap', value: 0},
-                {label: 'Etkinlik', value: 1},
+                {label: 'Kitap', value: 'kitap'},
+                {label: 'Etkinlik', value: 'etkinlik'},
               ]}
               onValueChange={(itemValue, itemIndex) => {
                 setFieldValue('type', itemValue);
               }}
             />
-            <MyButton text={'Kaydet'} slim />
+            <MyButton text={'Kaydet'} slim onPress={handleSubmit} />
           </View>
         )}
       </Formik>
-    </View>
+    </ScrollView>
   );
 };
 

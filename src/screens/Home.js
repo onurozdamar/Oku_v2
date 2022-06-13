@@ -4,8 +4,22 @@ import MainPage from './MainPage';
 import Books from './Books';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {TouchableOpacity} from 'react-native';
 
 const Tab = createBottomTabNavigator();
+
+const Menu = ({onPress}) => {
+  return (
+    <TouchableOpacity
+      style={{margin: 15}}
+      hitSlop={{top: 15, bottom: 15, left: 20, right: 20}}
+      onPress={() => {
+        onPress && onPress();
+      }}>
+      <Icon name={'history'} size={30} color={'black'} />
+    </TouchableOpacity>
+  );
+};
 
 const Home = ({navigation}) => {
   return (
@@ -31,7 +45,21 @@ const Home = ({navigation}) => {
         tabBarInactiveTintColor: 'gray',
       })}>
       <Tab.Screen name="Ana Sayfa" component={MainPage} />
-      <Tab.Screen name="Kitap Oku" component={ReadBook} />
+      <Tab.Screen
+        name="Kitap Oku"
+        component={ReadBook}
+        options={({navigation, route}) => ({
+          headerRight: () => (
+            <Menu
+              onPress={() => {
+                navigation.navigate('Okuma Geçmişi', {
+                  data: route.params.book,
+                });
+              }}
+            />
+          ),
+        })}
+      />
       <Tab.Screen name="Kitaplar" component={Books} />
     </Tab.Navigator>
   );

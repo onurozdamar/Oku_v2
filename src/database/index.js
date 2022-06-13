@@ -102,6 +102,27 @@ export class BaseManager {
     });
   }
 
+  getBooksByAuthorId(authorId) {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql('SELECT * FROM Book WHERE authorId=' + authorId)
+          .then(([values]) => {
+            var array = [];
+
+            for (let index = 0; index < values.rows.length; index++) {
+              const element = values.rows.item(index);
+              array.push(element);
+            }
+
+            resolve(array);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
+
   deleteBook(id) {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
@@ -146,11 +167,9 @@ export class BaseManager {
             `VALUES('${model.authorName}','${new Date()}')`,
         )
           .then(val => {
-            console.log(val);
             resolve(val[0].insertId);
           })
           .catch(err => {
-            console.log('err', err);
             reject(err);
           });
       });
@@ -182,6 +201,20 @@ export class BaseManager {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
         db.executeSql(`SELECT * FROM Author WHERE authorName='${authorName}'`)
+          .then(([values]) => {
+            resolve(values.rows.item(0));
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
+
+  getAuthorById(authorId) {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(`SELECT * FROM Author WHERE authorId='${authorId}'`)
           .then(([values]) => {
             resolve(values.rows.item(0));
           })
@@ -271,10 +304,9 @@ export class BaseManager {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
         db.executeSql(
-          `SELECT * FROM History WHERE bookId='${bookId}' ORDER BY readDate ASC`,
+          `SELECT * FROM History WHERE bookId='${bookId}' ORDER BY readDate DESC LIMIT 1`,
         )
           .then(([values]) => {
-            console.log(values);
             resolve(values.rows.item(0));
           })
           .catch(err => {
@@ -291,7 +323,22 @@ export class BaseManager {
           `SELECT * FROM History GROUP BY bookId ORDER BY readDate ASC`,
         )
           .then(([values]) => {
-            console.log(values);
+            resolve(values.rows.item(0));
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
+
+  getLastReadedBook() {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          `SELECT * FROM Book WHERE bookId=(SELECT bookId FROM History ORDER BY readDate DESC LIMIT 1)`,
+        )
+          .then(([values]) => {
             resolve(values.rows.item(0));
           })
           .catch(err => {

@@ -22,9 +22,15 @@ const ReadBook = ({navigation, route}) => {
 
   useEffect(() => {
     if (bookId) {
-      manager.getBookById(bookId).then(res => setBook(res));
+      manager.getBookById(bookId).then(res => {
+        setBook(res);
+        navigation.setParams({book: res});
+      });
     } else {
-      manager.getLastReadedBook().then(res => setBook(res));
+      manager.getLastReadedBook().then(res => {
+        setBook(res);
+        navigation.setParams({book: res});
+      });
     }
   }, [bookId]);
 

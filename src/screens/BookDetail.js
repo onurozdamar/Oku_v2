@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import MyButton from '../components/MyButton';
+import {BaseManager} from '../database';
 
 const Row = ({info, text}) => (
   <View style={styles.row}>
@@ -11,17 +12,30 @@ const Row = ({info, text}) => (
 
 const BookDetail = ({navigation, route}) => {
   const data = route?.params?.data;
+  const manager = new BaseManager();
+
+  const [authorName, setAuthorName] = useState('');
+  const [lastReadDate, setLastReadDate] = useState(null);
+
+  useEffect(() => {
+    manager
+      .getAuthorById(data.authorId)
+      .then(res => setAuthorName(res.authorName));
+    manager
+      .getLastReadByBook(data.bookId)
+      .then(res => setLastReadDate(res.readDate));
+  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.img}></View>
-      <Text style={styles.bookName}>{data.name}</Text>
-      <Text style={styles.bookName}>{data.author}</Text>
+      <Text style={styles.bookName}>{data.bookName}</Text>
+      <Text style={styles.bookName}>{authorName}</Text>
       <View style={styles.card}>
         <Row info={'Toplam Sayfa:'} text={data.page} />
         <Row info={'Sayfa:'} text={data.currentPage} />
         <Row info={'Ekleme Tarihi:'} text={data.addDate} />
-        <Row info={'Son Okuma'} text={data.lastRead} />
+        <Row info={'Son Okuma'} text={lastReadDate} />
       </View>
       <View style={styles.buttons}>
         <MyButton

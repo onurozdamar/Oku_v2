@@ -21,10 +21,11 @@ const ReadBook = ({navigation, route}) => {
   }, []);
 
   useEffect(() => {
-    bookId &&
-      manager.getBookById(bookId).then(res => {
-        setBook(res);
-      });
+    if (bookId) {
+      manager.getBookById(bookId).then(res => setBook(res));
+    } else {
+      manager.getLastReadedBook().then(res => setBook(res));
+    }
   }, [bookId]);
 
   const isEmpty = obj => {

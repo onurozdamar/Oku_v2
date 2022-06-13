@@ -90,6 +90,28 @@ export class BaseManager {
     });
   }
 
+  getReadingBooks() {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          'SELECT * FROM Book WHERE currentPage>0 AND currentPage<page',
+        )
+          .then(([values]) => {
+            var array = [];
+
+            for (let index = 0; index < values.rows.length; index++) {
+              const element = values.rows.item(index);
+              array.push(element);
+            }
+            resolve(array);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
+
   getBookById(bookId) {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {

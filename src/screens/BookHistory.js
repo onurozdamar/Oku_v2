@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, FlatList, TouchableOpacity} from 'react-native';
 import IconButton from '../components/IconButton';
 import {BaseManager} from '../database';
+import {formatDate} from '../helper';
 
 const Row = ({navigation, data}) => {
   const [open, setOpen] = useState(false);
@@ -13,7 +14,7 @@ const Row = ({navigation, data}) => {
         setOpen(!open);
       }}>
       <View style={styles.row}>
-        <Text style={{fontSize: 18, flex: 1}}>{data.readDate}</Text>
+        <Text style={{fontSize: 18, flex: 1}}>{formatDate(data.readDate)}</Text>
         <Text style={styles.info}>{data.readTime}</Text>
         <Text style={styles.info}>{data.readPage}</Text>
       </View>

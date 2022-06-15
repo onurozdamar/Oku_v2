@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import MyButton from '../components/MyButton';
 import {BaseManager} from '../database';
+import {formatDate} from '../helper';
 
 const Row = ({info, text}) => (
   <View style={styles.row}>
@@ -34,8 +35,8 @@ const BookDetail = ({navigation, route}) => {
       <View style={styles.card}>
         <Row info={'Toplam Sayfa:'} text={data.page} />
         <Row info={'Sayfa:'} text={data.currentPage} />
-        <Row info={'Ekleme Tarihi:'} text={data.addDate} />
-        <Row info={'Son Okuma'} text={lastReadDate} />
+        <Row info={'Ekleme Tarihi:'} text={formatDate(data.addDate)} />
+        <Row info={'Son Okuma'} text={formatDate(lastReadDate)} />
       </View>
       <View style={styles.buttons}>
         <MyButton

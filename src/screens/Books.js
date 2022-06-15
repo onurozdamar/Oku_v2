@@ -1,5 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
 import BookCard from '../components/BookCard';
 import {BaseManager} from '../database';
@@ -10,7 +10,7 @@ const Books = ({navigation}) => {
 
   useFocusEffect(
     useCallback(() => {
-      manager.getBooks().then(res => {
+      manager.getBooksWithLastRead().then(res => {
         setData(res);
       });
     }, []),

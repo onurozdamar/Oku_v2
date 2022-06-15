@@ -90,6 +90,29 @@ export class BaseManager {
     });
   }
 
+  getBooksWithLastRead() {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          'SELECT * FROM Book LEFT OUTER JOIN History ON History.bookId = Book.bookId GROUP BY Book.bookId ORDER BY readDate DESC',
+        )
+          .then(([values]) => {
+            var array = [];
+
+            for (let index = 0; index < values.rows.length; index++) {
+              const element = values.rows.item(index);
+              array.push(element);
+            }
+
+            resolve(array);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
+
   getReadingBooks() {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
@@ -374,23 +397,7 @@ export class BaseManager {
           `SELECT * FROM History WHERE bookId='${bookId}' ORDER BY readDate DESC LIMIT 1`,
         )
           .then(([values]) => {
-            resolve(values.rows.item(0));
-          })
-          .catch(err => {
-            reject(err);
-          });
-      });
-    });
-  }
-
-  getLastReads() {
-    return new Promise((resolve, reject) => {
-      this.openDatabase().then(db => {
-        db.executeSql(
-          `SELECT * FROM History GROUP BY bookId ORDER BY readDate ASC`,
-        )
-          .then(([values]) => {
-            resolve(values.rows.item(0));
+            resolve(values.rows.item(0) || {});
           })
           .catch(err => {
             reject(err);

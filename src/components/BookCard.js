@@ -36,7 +36,7 @@ export default function BookCard(props) {
       <View style={styles.row}>
         <View style={styles.left}>
           <Text style={styles.info}>Son Okuma:</Text>
-          <Text style={styles.name}>{data?.lastRead}</Text>
+          <Text style={styles.name}>{data?.readDate}</Text>
         </View>
         <View style={styles.right}>
           <Text style={{...styles.info, flex: 5}}>Sayfa:</Text>

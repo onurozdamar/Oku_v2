@@ -117,7 +117,8 @@ export class BaseManager {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
         db.executeSql(
-          'SELECT *, Book.bookId FROM Book LEFT OUTER JOIN History ON History.bookId = Book.bookId WHERE Book.currentPage>0 AND Book.currentPage<page GROUP BY Book.bookId ORDER BY readDate DESC',
+          'SELECT *, Book.bookId FROM Book LEFT OUTER JOIN History ON History.bookId = Book.bookId' +
+            ' WHERE Book.currentPage>0 AND Book.currentPage<page GROUP BY Book.bookId ORDER BY readDate DESC',
         )
           .then(([values]) => {
             var array = [];
@@ -390,7 +391,9 @@ export class BaseManager {
   getHistories(bookId) {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
-        db.executeSql(`SELECT * FROM History WHERE bookId=${bookId}`)
+        db.executeSql(
+          `SELECT * FROM History WHERE bookId=${bookId} ORDER BY readDate DESC`,
+        )
           .then(([values]) => {
             var array = [];
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {formatDate} from '../helper';
 
 const colors = [
   '#E3FCBF9d',
@@ -16,7 +17,11 @@ export default function BookCard(props) {
   const {data, onPress} = props;
 
   const Color = () => {
-    return colors[Math.floor((data?.currentPage / data?.page || 0) * 8)];
+    const index = Math.min(
+      Math.floor((data?.currentPage / data?.page || 0) * 8),
+      7,
+    );
+    return colors[index];
   };
 
   return (
@@ -30,17 +35,17 @@ export default function BookCard(props) {
         </View>
         <View style={styles.right}>
           <Text style={{...styles.info, flex: 5}}>Toplam Sayfa:</Text>
-          <Text style={{...styles.name, flex: 3}}>{data?.page}</Text>
+          <Text style={{...styles.date, flex: 3}}>{data?.page}</Text>
         </View>
       </View>
       <View style={styles.row}>
         <View style={styles.left}>
           <Text style={styles.info}>Son Okuma:</Text>
-          <Text style={styles.name}>{data?.readDate}</Text>
+          <Text style={styles.date}>{formatDate(data?.readDate)}</Text>
         </View>
         <View style={styles.right}>
           <Text style={{...styles.info, flex: 5}}>Sayfa:</Text>
-          <Text style={{...styles.name, flex: 3}}>{data?.currentPage}</Text>
+          <Text style={{...styles.date, flex: 3}}>{data?.currentPage}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -86,6 +91,22 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     marginLeft: 5,
     flex: 1,
+    alignSelf: 'center',
+  },
+  date: {
+    color: 'rgba(11,11,10,0.7)',
+    fontSize: 14,
+    marginRight: 5,
+    flex: 2,
+    textAlign: 'center',
+    alignSelf: 'center',
+  },
+  page: {
+    color: 'rgba(11,11,10,0.7)',
+    fontSize: 16,
+    marginRight: 5,
+    flex: 2,
+    textAlign: 'center',
     alignSelf: 'center',
   },
 });

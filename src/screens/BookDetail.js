@@ -35,12 +35,12 @@ const BookDetail = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <View style={styles.img}></View>
-      <Text style={styles.bookName}>{book.bookName}</Text>
+      <Text style={styles.bookName}>{book?.bookName}</Text>
       <Text style={styles.bookName}>{authorName}</Text>
       <View style={styles.card}>
-        <Row info={'Toplam Sayfa:'} text={book.page} />
-        <Row info={'Sayfa:'} text={book.currentPage} />
-        <Row info={'Ekleme Tarihi:'} text={formatDate(book.addDate)} />
+        <Row info={'Toplam Sayfa:'} text={book?.page} />
+        <Row info={'Sayfa:'} text={book?.currentPage} />
+        <Row info={'Ekleme Tarihi:'} text={formatDate(book?.addDate)} />
         <Row info={'Son Okuma'} text={formatDate(lastReadDate)} />
       </View>
       <View style={styles.buttons}>

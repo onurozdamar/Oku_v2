@@ -4,7 +4,7 @@ import IconButton from '../components/IconButton';
 import {BaseManager} from '../database';
 import {formatDate} from '../helper';
 
-const Row = ({navigation, data}) => {
+const Row = ({navigation, data, onDelete}) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -41,7 +41,9 @@ const Row = ({navigation, data}) => {
             icon={'delete'}
             color={'red'}
             style={{}}
-            onPress={() => {}}
+            onPress={() => {
+              onDelete();
+            }}
           />
         </View>
       </View>
@@ -54,12 +56,21 @@ const BookHistory = ({navigation, route}) => {
   const manager = new BaseManager();
 
   const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    manager.getHistories(data.bookId).then(res => {
-      setHistory(res);
-    });
+    getHistories();
   }, []);
+
+  function getHistories() {
+    setLoading(true);
+    manager
+      .getHistories(data.bookId)
+      .then(res => {
+        setHistory(res);
+      })
+      .finally(() => setLoading(false));
+  }
 
   return (
     <View style={styles.container}>
@@ -78,14 +89,15 @@ const BookHistory = ({navigation, route}) => {
       <FlatList
         data={history}
         keyExtractor={(item, index) => index.toString()}
+        refreshing={loading}
+        onRefresh={() => {}}
         renderItem={data => (
           <Row
             data={data.item}
             navigation={navigation}
-            onPress={() => {
-              navigation.navigate('Kitap Detayı', {
-                data: data.item,
-              });
+            onDelete={() => {
+              setLoading(true);
+              manager.deleteHistory(data.item).then(() => getHistories());
             }}
           />
         )}

@@ -211,6 +211,24 @@ export class BaseManager {
     });
   }
 
+  decreaseBookPage(bookId, page) {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          'UPDATE Book SET ' +
+            `currentPage = currentPage - ${page}
+             where bookId = ${bookId};`,
+        )
+          .then(val => {
+            resolve(true);
+          })
+          .catch(err => {
+            reject(false);
+          });
+      });
+    });
+  }
+
   deleteBook(id) {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
@@ -422,11 +440,12 @@ export class BaseManager {
     });
   }
 
-  deleteHistory(id) {
+  deleteHistory(model) {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
-        db.executeSql('DELETE FROM History where historyId=' + id)
+        db.executeSql('DELETE FROM History where historyId=' + model.historyId)
           .then(val => {
+            this.decreaseBookPage(model.bookId, model.readPage);
             resolve(true);
           })
           .catch(err => {

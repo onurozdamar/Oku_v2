@@ -457,5 +457,19 @@ export class BaseManager {
       });
     });
   }
+
+  deleteHistoryByBookId(bookId) {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql('DELETE FROM History where bookId=' + bookId)
+          .then(val => {
+            resolve(true);
+          })
+          .catch(err => {
+            reject(false);
+          });
+      });
+    });
+  }
   //#endregion
 }

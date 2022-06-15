@@ -94,7 +94,7 @@ export class BaseManager {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
         db.executeSql(
-          'SELECT * FROM Book LEFT OUTER JOIN History ON History.bookId = Book.bookId GROUP BY Book.bookId ORDER BY readDate DESC',
+          'SELECT *, Book.bookId FROM Book LEFT OUTER JOIN History ON History.bookId = Book.bookId GROUP BY Book.bookId ORDER BY readDate DESC',
         )
           .then(([values]) => {
             var array = [];

@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import MyButton from '../components/MyButton';
 import {BaseManager} from '../database';
@@ -15,27 +16,31 @@ const BookDetail = ({navigation, route}) => {
   const data = route?.params?.data;
   const manager = new BaseManager();
 
+  const [book, setBook] = useState({});
   const [authorName, setAuthorName] = useState('');
   const [lastReadDate, setLastReadDate] = useState(null);
 
-  useEffect(() => {
-    manager
-      .getAuthorById(data.authorId)
-      .then(res => setAuthorName(res.authorName));
-    manager
-      .getLastReadByBook(data.bookId)
-      .then(res => setLastReadDate(res.readDate));
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      manager.getBookById(data.bookId).then(res => setBook(res));
+      manager
+        .getAuthorById(data.authorId)
+        .then(res => setAuthorName(res.authorName));
+      manager
+        .getLastReadByBook(data.bookId)
+        .then(res => setLastReadDate(res.readDate));
+    }, []),
+  );
 
   return (
     <View style={styles.container}>
       <View style={styles.img}></View>
-      <Text style={styles.bookName}>{data.bookName}</Text>
+      <Text style={styles.bookName}>{book.bookName}</Text>
       <Text style={styles.bookName}>{authorName}</Text>
       <View style={styles.card}>
-        <Row info={'Toplam Sayfa:'} text={data.page} />
-        <Row info={'Sayfa:'} text={data.currentPage} />
-        <Row info={'Ekleme Tarihi:'} text={formatDate(data.addDate)} />
+        <Row info={'Toplam Sayfa:'} text={book.page} />
+        <Row info={'Sayfa:'} text={book.currentPage} />
+        <Row info={'Ekleme Tarihi:'} text={formatDate(book.addDate)} />
         <Row info={'Son Okuma'} text={formatDate(lastReadDate)} />
       </View>
       <View style={styles.buttons}>
@@ -44,7 +49,7 @@ const BookDetail = ({navigation, route}) => {
           text={'Oku'}
           onPress={() => {
             navigation.navigate('Kitap Oku', {
-              data: data.bookId,
+              data: book.bookId,
             });
           }}
         />
@@ -53,7 +58,7 @@ const BookDetail = ({navigation, route}) => {
           text={'Geçmiş'}
           onPress={() => {
             navigation.navigate('Okuma Geçmişi', {
-              data,
+              data: book,
             });
           }}
         />

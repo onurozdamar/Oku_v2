@@ -17,8 +17,6 @@ const BookDetail = ({navigation, route}) => {
   const manager = new BaseManager();
 
   const [book, setBook] = useState({});
-  const [authorName, setAuthorName] = useState('');
-  const [lastReadDate, setLastReadDate] = useState(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -26,12 +24,6 @@ const BookDetail = ({navigation, route}) => {
         setBook(res);
         navigation.setParams({book: res});
       });
-      manager
-        .getAuthorById(data.authorId)
-        .then(res => setAuthorName(res.authorName));
-      manager
-        .getLastReadByBook(data.bookId)
-        .then(res => setLastReadDate(res.readDate));
     }, []),
   );
 
@@ -39,12 +31,12 @@ const BookDetail = ({navigation, route}) => {
     <View style={styles.container}>
       <View style={styles.img}></View>
       <Text style={styles.bookName}>{book?.bookName}</Text>
-      <Text style={styles.bookName}>{authorName}</Text>
+      <Text style={styles.bookName}>{book?.authorName}</Text>
       <View style={styles.card}>
         <Row info={'Toplam Sayfa:'} text={book?.page} />
         <Row info={'Sayfa:'} text={book?.currentPage} />
         <Row info={'Ekleme Tarihi:'} text={formatDate(book?.addDate)} />
-        <Row info={'Son Okuma'} text={formatDate(lastReadDate)} />
+        <Row info={'Son Okuma'} text={formatDate(book?.readDate)} />
       </View>
       <View style={styles.buttons}>
         <MyButton

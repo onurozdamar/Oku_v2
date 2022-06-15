@@ -139,7 +139,10 @@ export class BaseManager {
   getBookById(bookId) {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
-        db.executeSql(`SELECT * FROM Book WHERE bookId=${bookId}`)
+        db.executeSql(
+          `SELECT *, Book.bookId FROM Book INNER JOIN Author ON Book.authorId = Author.authorId
+           LEFT OUTER JOIN History ON Book.bookId = History.bookId WHERE Book.bookId=${bookId}`,
+        )
           .then(([values]) => {
             resolve(values.rows.item(0));
           })

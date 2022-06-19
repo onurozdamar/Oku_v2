@@ -182,7 +182,6 @@ export class BaseManager {
             `bookName = '${model.bookName}',
              page = '${model.page}',
              currentPage = '${model.currentPage}',
-             addDate = '${model.addDate?.toISOString()}',
              type = '${model.type}',
              authorId = '${model.authorId}'
              where bookId = ${model.bookId};`,
@@ -330,6 +329,24 @@ export class BaseManager {
           })
           .catch(err => {
             reject(err);
+          });
+      });
+    });
+  }
+
+  updateAuthor(model) {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          'UPDATE Author SET ' +
+            `authorName = '${model.authorName}'
+             where authorId = ${model.authorId};`,
+        )
+          .then(val => {
+            resolve(true);
+          })
+          .catch(err => {
+            reject(false);
           });
       });
     });

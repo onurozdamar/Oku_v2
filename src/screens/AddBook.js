@@ -7,7 +7,9 @@ import MyTextInput from '../components/MyTextInput';
 import {BaseManager} from '../database';
 import * as Yup from 'yup';
 
-const AddBook = ({navigation}) => {
+const AddBook = ({navigation, route}) => {
+  const book = route?.params?.data;
+
   const manager = new BaseManager();
 
   const validationSchema = Yup.object().shape({
@@ -16,6 +18,9 @@ const AddBook = ({navigation}) => {
       .required('Bu alan zorunludur.')
       .positive('Bu alan 0 dan büyük olmalıdır')
       .integer('Bu alan tam sayı olmalıdır.'),
+    currentPage: Yup.number('Bu alan sayı olmalıdır.').integer(
+      'Bu alan tam sayı olmalıdır.',
+    ),
     authorName: Yup.string().required('Bu alan zorunludur.'),
   });
 
@@ -23,24 +28,32 @@ const AddBook = ({navigation}) => {
     <ScrollView style={styles.container}>
       <Formik
         initialValues={{
-          bookName: '',
-          page: '',
-          authorName: '',
-          type: 'kitap',
+          bookName: book?.bookName || '',
+          page: (book?.page || '') + '',
+          authorName: book?.authorName || '',
+          currentPage: (book?.currentPage || '0') + '',
+          type: book?.type || 'kitap',
         }}
         validationSchema={validationSchema}
         onSubmit={values => {
-          manager.getAuthorByName(values.authorName).then(author => {
-            if (author) {
-              values.authorId = author.authorId;
-              manager.addBook(values);
-            } else {
-              manager.addAuthor(values).then(authorId => {
-                values.authorId = authorId;
+          if (book) {
+            values.authorId = book.authorId;
+            values.bookId = book.bookId;
+            manager.updateBook(values);
+            // manager.updateAuthor(values);
+          } else {
+            manager.getAuthorByName(values.authorName).then(author => {
+              if (author) {
+                values.authorId = author.authorId;
                 manager.addBook(values);
-              });
-            }
-          });
+              } else {
+                manager.addAuthor(values).then(authorId => {
+                  values.authorId = authorId;
+                  manager.addBook(values);
+                });
+              }
+            });
+          }
 
           navigation.goBack();
         }}
@@ -78,6 +91,16 @@ const AddBook = ({navigation}) => {
               error={errors.authorName}
             />
 
+            {book && (
+              <MyTextInput
+                label={'Sayfa'}
+                value={values.currentPage}
+                onBlur={handleBlur('currentPage')}
+                onChangeText={handleChange('currentPage')}
+                error={errors.currentPage}
+              />
+            )}
+
             <MyPicker
               label={'Tür'}
               value={values.type}
@@ -90,7 +113,7 @@ const AddBook = ({navigation}) => {
               }}
             />
             <MyButton
-              text={'Kaydet'}
+              text={book ? 'Güncelle' : 'Kaydet'}
               slim
               onPress={handleSubmit}
               disabled={!isValid}

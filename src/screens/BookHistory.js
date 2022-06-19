@@ -19,7 +19,7 @@ const Row = ({navigation, data, onDelete}) => {
         <Text style={styles.info}>{data.readPage}</Text>
       </View>
       <View style={{...styles.extend, display: open ? 'flex' : 'none'}}>
-        <Text style={styles.desc}>{data.desc}s</Text>
+        <Text style={styles.desc}>{data.desc}</Text>
         <View
           style={{
             display: 'flex',

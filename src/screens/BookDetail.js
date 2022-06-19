@@ -20,7 +20,7 @@ const BookDetail = ({navigation, route}) => {
 
   useFocusEffect(
     useCallback(() => {
-      manager.getBookById(data.bookId).then(res => {
+      manager.getBookWithHistoryAndAuthorById(data.bookId).then(res => {
         setBook(res);
         navigation.setParams({book: res});
       });

@@ -1,54 +1,34 @@
 import React from 'react';
-import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {LineChart} from 'react-native-chart-kit';
+import {ScrollView, StyleSheet} from 'react-native';
+import MyLineChart from '../components/MyLineChart';
 
 const Statistics = ({navigation}) => {
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.name}>İstatistikler</Text>
-      <LineChart
-        data={{
-          labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-          datasets: [
-            {
-              data: [
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-                Math.random() * 100,
-              ],
-            },
-          ],
-        }}
-        width={Dimensions.get('window').width} // from react-native
-        height={220}
-        yAxisLabel="$"
-        yAxisSuffix="k"
-        yAxisInterval={1} // optional, defaults to 1
-        chartConfig={{
-          backgroundColor: '#e26a00',
-          backgroundGradientFrom: '#fb8c00',
-          backgroundGradientTo: '#ffa726',
-          decimalPlaces: 2, // optional, defaults to 2dp
-          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          style: {
-            borderRadius: 16,
-          },
-          propsForDots: {
-            r: '6',
-            strokeWidth: '2',
-            stroke: '#ffa726',
-          },
-        }}
-        bezier
-        style={{
-          marginVertical: 8,
-          borderRadius: 16,
-        }}
+      <MyLineChart
+        headerText={'Haftalık Okuma'}
+        labels={['Paz', 'Pts', 'Sal', 'Çar', 'Per', 'Cum', 'Cts']}
+        path={'getWeeklyReading'}
       />
+      <MyLineChart
+        headerText={'Aylık Okuma'}
+        labels={[
+          'Oca',
+          'Şub',
+          'Mar',
+          'Nis',
+          'May',
+          'Haz',
+          'Tem',
+          'Ağu',
+          'Eyl',
+          'Eki',
+          'Kas',
+          'Ara',
+        ]}
+        path={'getMonthlyReading'}
+      />
+      <MyLineChart headerText={'Yıllık Okuma'} labels={['Paz']} />
     </ScrollView>
   );
 };

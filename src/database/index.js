@@ -94,7 +94,8 @@ export class BaseManager {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
         db.executeSql(
-          'SELECT *, Book.bookId FROM Book LEFT OUTER JOIN History ON History.bookId = Book.bookId GROUP BY Book.bookId ORDER BY readDate DESC',
+          'SELECT *, Book.bookId FROM Book LEFT OUTER JOIN History ON' +
+            ' History.bookId = Book.bookId GROUP BY Book.bookId ORDER BY readDate DESC',
         )
           .then(([values]) => {
             var array = [];
@@ -137,6 +138,20 @@ export class BaseManager {
   }
 
   getBookById(bookId) {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(`SELECT * FROM Book WHERE bookId=${bookId}`)
+          .then(([values]) => {
+            resolve(values.rows.item(0));
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
+
+  getBookWithHistoryAndAuthorById(bookId) {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
         db.executeSql(
@@ -458,6 +473,28 @@ export class BaseManager {
           })
           .catch(err => {
             reject(err);
+          });
+      });
+    });
+  }
+
+  updateHistory(model) {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          'UPDATE History SET ' +
+            `desc = '${model.desc}',
+              readDate = '${model.readDate}',
+              readPage = '${model.readPage}',
+              readTime = '${model.readTime}',
+              bookId = '${model.bookId}'
+             where historyId = ${model.historyId};`,
+        )
+          .then(val => {
+            resolve(true);
+          })
+          .catch(err => {
+            reject(false);
           });
       });
     });

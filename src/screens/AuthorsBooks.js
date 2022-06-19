@@ -11,7 +11,10 @@ const AuthorsBooks = ({navigation, route}) => {
 
   useEffect(() => {
     author && navigation.setOptions({title: author.authorName + ' Kitapları'});
-    manager.getBooksByAuthorId(author.authorId).then(res => setData(res));
+    navigation.setParams({author});
+    manager
+      .getBooksWithLastReadByAuthorId(author.authorId)
+      .then(res => setData(res));
   }, []);
 
   return (

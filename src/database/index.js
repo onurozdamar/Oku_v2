@@ -189,6 +189,31 @@ export class BaseManager {
     });
   }
 
+  getBooksWithLastReadByAuthorId(authorId) {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          `SELECT *, Book.bookId FROM Book LEFT OUTER JOIN History 
+           ON Book.bookId = History.bookId WHERE Book.authorId=${authorId}
+           GROUP BY History.bookId ORDER BY History.readDate DESC`,
+        )
+          .then(([values]) => {
+            var array = [];
+
+            for (let index = 0; index < values.rows.length; index++) {
+              const element = values.rows.item(index);
+              array.push(element);
+            }
+
+            resolve(array);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
+
   updateBook(model) {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
@@ -377,6 +402,23 @@ export class BaseManager {
           .catch(err => {
             reject(false);
           });
+      });
+    });
+  }
+
+  deleteAuthorWithBooksAndHistory(id) {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.transaction(tx => {
+          tx.executeSql(
+            `DELETE FROM History WHERE EXISTS (SELECT * FROM History INNER JOIN Book ON Book.bookId = History.bookId 
+              INNER JOIN Author ON Book.authorId = Author.authorId WHERE Author.authorId=${id})`,
+          );
+          tx.executeSql('DELETE FROM Author WHERE authorId=' + id);
+          tx.executeSql('DELETE FROM Book WHERE authorId=' + id);
+        })
+          .then(res => resolve(res))
+          .catch(err => reject(err));
       });
     });
   }

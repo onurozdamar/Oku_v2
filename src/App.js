@@ -16,17 +16,19 @@ import {BaseManager} from './database';
 
 const Stack = createStackNavigator();
 
-const Menu = ({onEditPress, onDeletePress}) => {
+const Menu = ({onEditPress, onDeletePress, dontEdit}) => {
   return (
     <View style={{display: 'flex', flexDirection: 'row'}}>
-      <TouchableOpacity
-        style={{margin: 15}}
-        hitSlop={{top: 15, bottom: 15, left: 20, right: 20}}
-        onPress={() => {
-          onEditPress && onEditPress();
-        }}>
-        <Icon name={'pencil'} size={30} color={'green'} />
-      </TouchableOpacity>
+      {!dontEdit && (
+        <TouchableOpacity
+          style={{margin: 15}}
+          hitSlop={{top: 15, bottom: 15, left: 20, right: 20}}
+          onPress={() => {
+            onEditPress && onEditPress();
+          }}>
+          <Icon name={'pencil'} size={30} color={'green'} />
+        </TouchableOpacity>
+      )}
       <TouchableOpacity
         style={{margin: 15}}
         hitSlop={{top: 15, bottom: 15, left: 20, right: 20}}
@@ -75,7 +77,24 @@ export default function App() {
         <Stack.Screen name="Okunan Kitaplar" component={ReadingBooks} />
         <Stack.Screen name="Kitap Ekle" component={AddBook} />
         <Stack.Screen name="Yazarlar" component={Authors} />
-        <Stack.Screen name="Yazarın Kitapları" component={AuthorsBooks} />
+        <Stack.Screen
+          name="Yazarın Kitapları"
+          component={AuthorsBooks}
+          options={({navigation, route}) => ({
+            headerRight: () => (
+              <Menu
+                onDeletePress={() => {
+                  const manager = new BaseManager();
+                  manager.deleteAuthorWithBooksAndHistory(
+                    route.params.author.authorId,
+                  );
+                  navigation.goBack();
+                }}
+                dontEdit
+              />
+            ),
+          })}
+        />
         <Stack.Screen name="İstatistikler" component={Statistics} />
       </Stack.Navigator>
     </NavigationContainer>

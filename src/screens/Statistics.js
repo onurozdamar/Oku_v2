@@ -5,30 +5,9 @@ import MyLineChart from '../components/MyLineChart';
 const Statistics = ({navigation}) => {
   return (
     <ScrollView style={styles.container}>
-      <MyLineChart
-        headerText={'Haftalık Okuma'}
-        labels={['Paz', 'Pts', 'Sal', 'Çar', 'Per', 'Cum', 'Cts']}
-        path={'getWeeklyReading'}
-      />
-      <MyLineChart
-        headerText={'Aylık Okuma'}
-        labels={[
-          'Oca',
-          'Şub',
-          'Mar',
-          'Nis',
-          'May',
-          'Haz',
-          'Tem',
-          'Ağu',
-          'Eyl',
-          'Eki',
-          'Kas',
-          'Ara',
-        ]}
-        path={'getMonthlyReading'}
-      />
-      <MyLineChart headerText={'Yıllık Okuma'} labels={['Paz']} />
+      <MyLineChart headerText={'Haftalık Okuma'} path={'getWeeklyReading'} />
+      <MyLineChart headerText={'Aylık Okuma'} path={'getMonthlyReading'} />
+      <MyLineChart headerText={'Yıllık Okuma'} path={'getYearlyReading'} />
     </ScrollView>
   );
 };

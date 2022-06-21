@@ -580,13 +580,19 @@ export class BaseManager {
           `SELECT COUNT(*) AS count ,STRFTIME('%w',readDate) AS days FROM History GROUP BY days`,
         )
           .then(([values]) => {
-            var array = [];
+            const days = ['Paz', 'Pts', 'Sal', 'Çar', 'Per', 'Cum', 'Cts'];
+            const result = {labels: days, datasets: [{data: []}]};
 
-            for (let index = 0; index < values.rows.length; index++) {
-              const element = values.rows.item(index);
-              array.push(element.count);
+            for (let index = 0; index < days.length; index++) {
+              const element = values.rows.item(index) ?? {};
+              if (element.days == index) {
+                result.datasets[0].data.push(element.count);
+              } else {
+                result.datasets[0].data.push(0);
+              }
             }
-            resolve(array);
+
+            resolve(result);
           })
           .catch(err => {
             reject(err);
@@ -594,6 +600,7 @@ export class BaseManager {
       });
     });
   }
+
   getMonthlyReading() {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
@@ -601,13 +608,32 @@ export class BaseManager {
           `SELECT COUNT(*) AS count ,STRFTIME('%m',readDate) AS months FROM History GROUP BY months`,
         )
           .then(([values]) => {
-            var array = [];
+            const months = [
+              'Oca',
+              'Şub',
+              'Mar',
+              'Nis',
+              'May',
+              'Haz',
+              'Tem',
+              'Ağu',
+              'Eyl',
+              'Eki',
+              'Kas',
+              'Ara',
+            ];
+            const result = {labels: months, datasets: [{data: []}]};
 
-            for (let index = 0; index < values.rows.length; index++) {
-              const element = values.rows.item(index);
-              array.push(element.count);
+            for (let index = 0; index < months.length; index++) {
+              const element = values.rows.item(index) ?? {};
+              if (element.months * 1 === index + 1) {
+                result.datasets[0].data.push(element.count);
+              } else {
+                result.datasets[0].data.push(0);
+              }
             }
-            resolve(array);
+
+            resolve(result);
           })
           .catch(err => {
             reject(err);
@@ -615,6 +641,29 @@ export class BaseManager {
       });
     });
   }
-  getYearlyReading() {}
+
+  getYearlyReading() {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          `SELECT COUNT(*) AS count ,STRFTIME('%Y',readDate) AS years FROM History GROUP BY years`,
+        )
+          .then(([values]) => {
+            const result = {labels: [], datasets: [{data: []}]};
+
+            for (let index = 0; index < values.rows.length; index++) {
+              const element = values.rows.item(index);
+              result.datasets[0].data.push(element.count);
+              result.labels.push(element.years);
+            }
+
+            resolve(result);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
   //#endregion
 }

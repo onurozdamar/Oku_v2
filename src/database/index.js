@@ -665,5 +665,39 @@ export class BaseManager {
       });
     });
   }
+
+  getAuthorsBooksCount() {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          `SELECT COUNT(*) AS count, authorName FROM Book INNER JOIN 
+                        Author ON Book.authorId = Author.authorId GROUP BY Book.authorId`,
+        )
+          .then(([values]) => {
+            const color = count =>
+              `rgb(${(count * 72 + 48) % 255}, ${(count * 48 + 72) % 255}, ${
+                (count * 36 + 36) % 255
+              })`;
+            const result = [];
+
+            for (let index = 0; index < values.rows.length; index++) {
+              const element = values.rows.item(index);
+              result.push({
+                name: element.authorName,
+                count: element.count,
+                color: color(element.count),
+                legendFontColor: '#7F7F7F',
+                legendFontSize: 15,
+              });
+            }
+
+            resolve(result);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
   //#endregion
 }

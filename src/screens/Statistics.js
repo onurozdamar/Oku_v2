@@ -1,6 +1,7 @@
 import React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import MyLineChart from '../components/MyLineChart';
+import MyPieChart from '../components/MyPieChart';
 
 const Statistics = ({navigation}) => {
   return (
@@ -8,6 +9,11 @@ const Statistics = ({navigation}) => {
       <MyLineChart headerText={'Haftalık Okuma'} path={'getWeeklyReading'} />
       <MyLineChart headerText={'Aylık Okuma'} path={'getMonthlyReading'} />
       <MyLineChart headerText={'Yıllık Okuma'} path={'getYearlyReading'} />
+      <MyPieChart
+        headerText={'Yazar Kitap Sayısı'}
+        path={'getAuthorsBooksCount'}
+        accessor={'count'}
+      />
     </ScrollView>
   );
 };

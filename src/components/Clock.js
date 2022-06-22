@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import MyButton from './MyButton';
+import MyButton from './Input/MyButton';
 
 const Clock = ({}) => {
   const [timer, setTimer] = useState(0);

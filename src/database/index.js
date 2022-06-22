@@ -602,11 +602,93 @@ export class BaseManager {
     });
   }
 
+  getWeeklyReadingPageAndTime() {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          `SELECT SUM(readPage) AS pageSum, SUM(readTime) AS timeSum, 
+          STRFTIME('%w',readDate) AS days FROM History GROUP BY days`,
+        )
+          .then(([values]) => {
+            const days = ['Paz', 'Pts', 'Sal', 'Çar', 'Per', 'Cum', 'Cts'];
+            const result = {
+              labels: days,
+              datasets: [
+                {
+                  data: [],
+                  color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+                },
+                {
+                  data: [],
+                  color: (opacity = 1) => `rgba(65, 134, 244, ${opacity})`,
+                },
+              ],
+              legend: ['Sayfa', 'Saat'],
+            };
+
+            for (let index = 0; index < days.length; index++) {
+              const element = values.rows.item(index) ?? {};
+              if (element.days == index) {
+                result.datasets[0].data.push(element.pageSum);
+                result.datasets[1].data.push(element.timeSum);
+              } else {
+                result.datasets[0].data.push(0);
+                result.datasets[1].data.push(0);
+              }
+            }
+
+            resolve(result);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
+
+  getWeeklyReadingVelocity() {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          `SELECT CAST(SUM(readPage) AS float) / NULLIF(SUM(readTime), 1) AS velocity, 
+          STRFTIME('%w',readDate) AS days FROM History GROUP BY days`,
+        )
+          .then(([values]) => {
+            const days = ['Paz', 'Pts', 'Sal', 'Çar', 'Per', 'Cum', 'Cts'];
+            const result = {
+              labels: days,
+              datasets: [
+                {
+                  data: [],
+                  color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+                },
+              ],
+              legend: ['Hız Sayfa / Dakika'],
+            };
+
+            for (let index = 0; index < days.length; index++) {
+              const element = values.rows.item(index) ?? {};
+              if (element.days == index) {
+                result.datasets[0].data.push(element.velocity);
+              } else {
+                result.datasets[0].data.push(0);
+              }
+            }
+
+            resolve(result);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
+
   getMonthlyReading() {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
         db.executeSql(
-          `SELECT COUNT(*) AS count ,STRFTIME('%m',readDate) AS months FROM History GROUP BY months`,
+          `SELECT SUM(readPage) AS count ,STRFTIME('%m',readDate) AS months FROM History GROUP BY months`,
         )
           .then(([values]) => {
             const months = [
@@ -647,7 +729,7 @@ export class BaseManager {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
         db.executeSql(
-          `SELECT COUNT(*) AS count ,STRFTIME('%Y',readDate) AS years FROM History GROUP BY years`,
+          `SELECT SUM(readPage) AS count ,STRFTIME('%Y',readDate) AS years FROM History GROUP BY years`,
         )
           .then(([values]) => {
             const result = {labels: [], datasets: [{data: []}]};
@@ -735,7 +817,6 @@ export class BaseManager {
 
             for (let index = 0; index < values.rows.length; index++) {
               const element = values.rows.item(index);
-              console.log(element);
               if (element.sum > 0) {
                 if (element.sum >= element.page) {
                   result[0].sum++;

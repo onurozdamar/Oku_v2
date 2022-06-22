@@ -1,14 +1,23 @@
 import React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
+import MyBarChart from '../components/Chart/MyBarChart';
 import MyLineChart from '../components/Chart/MyLineChart';
 import MyPieChart from '../components/Chart/MyPieChart';
 
 const Statistics = ({navigation}) => {
   return (
     <ScrollView style={styles.container}>
-      <MyLineChart
-        headerText={'Haftalık Okunan Sayfa'}
+      <MyBarChart
+        headerText={'Haftalık Okuma Sayısı'}
         path={'getWeeklyReading'}
+      />
+      <MyLineChart
+        headerText={'Haftalık Okuma'}
+        path={'getWeeklyReadingPageAndTime'}
+      />
+      <MyLineChart
+        headerText={'Haftalık Okuma Hızı'}
+        path={'getWeeklyReadingVelocity'}
       />
       <MyLineChart
         headerText={'Aylık Okunan Sayfa'}

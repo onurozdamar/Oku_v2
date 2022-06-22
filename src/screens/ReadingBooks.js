@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
-import BookCard from '../components/BookCard';
+import BookCard from '../components/Card/BookCard';
 import {BaseManager} from '../database';
 
 const ReadingBooks = ({navigation}) => {

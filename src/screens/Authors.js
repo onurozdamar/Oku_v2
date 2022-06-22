@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
-import AuthorCard from '../components/AuthorCard';
+import AuthorCard from '../components/Card/AuthorCard';
 import {BaseManager} from '../database';
 
 const Authors = ({navigation}) => {

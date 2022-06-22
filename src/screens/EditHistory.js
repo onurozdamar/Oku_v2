@@ -1,9 +1,9 @@
 import {Formik} from 'formik';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import MyButton from '../components/MyButton';
-import MyDatePicker from '../components/MyDatePicker';
-import MyTextInput from '../components/MyTextInput';
+import MyButton from '../components/Input/MyButton';
+import MyDatePicker from '../components/Input/MyDatePicker';
+import MyTextInput from '../components/Input/MyTextInput';
 import * as Yup from 'yup';
 import {BaseManager} from '../database';
 

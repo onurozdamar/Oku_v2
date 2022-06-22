@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, Dimensions, View} from 'react-native';
 import {PieChart} from 'react-native-chart-kit';
-import {BaseManager} from '../database';
+import {BaseManager} from '../../database';
 
 export default function MyPieChart({headerText, path, accessor}) {
   const manager = new BaseManager();
@@ -69,5 +69,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 10,
   },
-  name: {},
+  name: {fontSize: 18, fontWeight: 'bold'},
 });

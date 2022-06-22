@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import MyButton from '../components/MyButton';
+import MyButton from '../components/Input/MyButton';
 
 const MainPage = ({navigation}) => {
   return (

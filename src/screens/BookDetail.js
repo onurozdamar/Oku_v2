@@ -1,7 +1,7 @@
 import {useFocusEffect} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import MyButton from '../components/MyButton';
+import MyButton from '../components/Input/MyButton';
 import {BaseManager} from '../database';
 import {formatDate} from '../helper';
 

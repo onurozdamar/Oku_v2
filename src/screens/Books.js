@@ -1,7 +1,7 @@
 import {useFocusEffect} from '@react-navigation/native';
 import React, {useCallback, useState} from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
-import BookCard from '../components/BookCard';
+import BookCard from '../components/Card/BookCard';
 import {BaseManager} from '../database';
 
 const Books = ({navigation}) => {

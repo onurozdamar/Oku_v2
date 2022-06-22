@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, FlatList, TouchableOpacity} from 'react-native';
-import IconButton from '../components/IconButton';
+import IconButton from '../components/Input/IconButton';
 import {BaseManager} from '../database';
 import {formatDate} from '../helper';
 

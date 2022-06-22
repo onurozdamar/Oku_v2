@@ -1,8 +1,8 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import Clock from '../components/Clock';
-import MyButton from '../components/MyButton';
-import MyTextInput from '../components/MyTextInput';
+import MyButton from '../components/Input/MyButton';
+import MyTextInput from '../components/Input/MyTextInput';
 import {Formik} from 'formik';
 import {BaseManager} from '../database';
 import * as Yup from 'yup';
@@ -45,6 +45,10 @@ const ReadBook = ({navigation, route}) => {
       .integer('Bu alan tam sayı olmalıdır.'),
   });
 
+  function r(s, e) {
+    return s + Math.floor(Math.random() * (e - s));
+  }
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.book}>
@@ -61,20 +65,25 @@ const ReadBook = ({navigation, route}) => {
             desc: '',
           }}
           onSubmit={(values, {resetForm}) => {
-            manager.addHistory({
-              ...values,
-              readPage: values.readPage * 1,
-              readDate: new Date(),
-              readTime: 50,
-              bookId: book.bookId,
-            });
-            manager.updateBookPage(
-              book.bookId,
-              book.currentPage + values.readPage * 1,
-            );
-            manager.getBookById(book.bookId).then(res => {
-              updateBook(res);
-            });
+            for (let index = 0; index < 10; index++) {
+              console.log('s');
+              const rp = r(5, 50);
+              const rd = new Date(r(2015, 2022), r(0, 11), r(1, 31));
+              rd.setHours(r(0, 24));
+              rd.setMinutes(r(0, 60));
+              manager.addHistory({
+                ...values,
+                readPage: rp,
+                readDate: rd,
+                readTime: r(10, 60),
+                bookId: book.bookId,
+              });
+              manager.updateBookPage(book.bookId, book.currentPage + rp);
+              manager.getBookById(book.bookId).then(res => {
+                updateBook(res);
+              });
+            }
+
             resetForm();
           }}
           validationSchema={validationSchema}

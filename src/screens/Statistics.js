@@ -1,7 +1,7 @@
 import React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
-import MyLineChart from '../components/MyLineChart';
-import MyPieChart from '../components/MyPieChart';
+import MyLineChart from '../components/Chart/MyLineChart';
+import MyPieChart from '../components/Chart/MyPieChart';
 
 const Statistics = ({navigation}) => {
   return (

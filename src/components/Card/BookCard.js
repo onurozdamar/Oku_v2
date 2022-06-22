@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {formatDate} from '../helper';
+import {formatDate} from '../../helper';
 
 const colors = [
   '#E3FCBF9d',

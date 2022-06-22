@@ -6,13 +6,27 @@ import MyPieChart from '../components/Chart/MyPieChart';
 const Statistics = ({navigation}) => {
   return (
     <ScrollView style={styles.container}>
-      <MyLineChart headerText={'Haftalık Okuma'} path={'getWeeklyReading'} />
-      <MyLineChart headerText={'Aylık Okuma'} path={'getMonthlyReading'} />
-      <MyLineChart headerText={'Yıllık Okuma'} path={'getYearlyReading'} />
+      <MyLineChart
+        headerText={'Haftalık Okunan Sayfa'}
+        path={'getWeeklyReading'}
+      />
+      <MyLineChart
+        headerText={'Aylık Okunan Sayfa'}
+        path={'getMonthlyReading'}
+      />
+      <MyLineChart
+        headerText={'Yıllık Okunan Sayfa'}
+        path={'getYearlyReading'}
+      />
       <MyPieChart
-        headerText={'Yazar Kitap Sayısı'}
+        headerText={'Yazarların Kitap Sayısı'}
         path={'getAuthorsBooksCount'}
         accessor={'count'}
+      />
+      <MyPieChart
+        headerText={'Kitap Okuma Oranı'}
+        path={'getBookReadRate'}
+        accessor={'sum'}
       />
     </ScrollView>
   );

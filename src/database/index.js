@@ -95,7 +95,8 @@ export class BaseManager {
       this.openDatabase().then(db => {
         db.executeSql(
           'SELECT *, Book.bookId FROM Book LEFT OUTER JOIN History ON' +
-            ' History.bookId = Book.bookId GROUP BY Book.bookId ORDER BY readDate DESC',
+            ' History.bookId = Book.bookId GROUP BY Book.bookId' +
+            ' ORDER BY readDate DESC, addDate DESC',
         )
           .then(([values]) => {
             var array = [];
@@ -689,6 +690,61 @@ export class BaseManager {
                 legendFontColor: '#7F7F7F',
                 legendFontSize: 15,
               });
+            }
+
+            resolve(result);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
+
+  getBookReadRate() {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          `SELECT *, Book.bookId,SUM(History.readPage) AS sum FROM Book 
+          LEFT OUTER JOIN History ON History.bookId = Book.bookId GROUP BY Book.bookId`,
+        )
+          .then(([values]) => {
+            const result = [
+              {
+                name: 'Bitirilenler',
+                sum: 0,
+                color: '#00ffaa',
+                legendFontColor: '#7F7F7F',
+                legendFontSize: 15,
+              },
+              {
+                name: 'Okunanlar',
+                sum: 0,
+                color: '#B8F1B0',
+                legendFontColor: '#7F7F7F',
+                legendFontSize: 15,
+              },
+              {
+                name: 'Başlanmamışlar',
+                sum: 0,
+                color: '#E3FCBF',
+                legendFontColor: '#7F7F7F',
+                legendFontSize: 15,
+              },
+            ];
+
+            for (let index = 0; index < values.rows.length; index++) {
+              const element = values.rows.item(index);
+              console.log(element);
+              if (element.sum > 0) {
+                if (element.sum >= element.page) {
+                  result[0].sum++;
+                } else {
+                  result[1].sum++;
+                }
+              } else {
+                result[2].sum++;
+              }
             }
 
             resolve(result);

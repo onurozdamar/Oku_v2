@@ -25,6 +25,7 @@ export default function MyPieChart({headerText, path, accessor}) {
       ) : (
         <PieChart
           data={data}
+          fromZero
           width={Dimensions.get('window').width} // from react-native
           height={220}
           // yAxisLabel="$"

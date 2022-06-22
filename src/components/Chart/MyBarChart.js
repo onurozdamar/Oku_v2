@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, Dimensions, View} from 'react-native';
-import {LineChart} from 'react-native-chart-kit';
+import {BarChart} from 'react-native-chart-kit';
 import {BaseManager} from '../../database';
 
-export default function MyLineChart({headerText, path}) {
+export default function MyBarChart({headerText, path}) {
   const manager = new BaseManager();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
@@ -23,7 +23,7 @@ export default function MyLineChart({headerText, path}) {
       {loading ? (
         <Text style={styles.name}>Yükleniyor...</Text>
       ) : (
-        <LineChart
+        <BarChart
           data={data}
           fromZero
           width={Dimensions.get('window').width} // from react-native

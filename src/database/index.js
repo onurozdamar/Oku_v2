@@ -688,7 +688,7 @@ export class BaseManager {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
         db.executeSql(
-          `SELECT SUM(readPage) AS count ,STRFTIME('%m',readDate) AS months FROM History GROUP BY months`,
+          `SELECT COUNT(*) AS count ,STRFTIME('%m',readDate) AS months FROM History GROUP BY months`,
         )
           .then(([values]) => {
             const months = [
@@ -725,11 +725,119 @@ export class BaseManager {
     });
   }
 
+  getMonthlyReadingPageAndTime() {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          `SELECT SUM(readPage) AS pageSum, SUM(readTime) AS timeSum, 
+          STRFTIME('%m',readDate) AS months FROM History GROUP BY months`,
+        )
+          .then(([values]) => {
+            const months = [
+              'Oca',
+              'Şub',
+              'Mar',
+              'Nis',
+              'May',
+              'Haz',
+              'Tem',
+              'Ağu',
+              'Eyl',
+              'Eki',
+              'Kas',
+              'Ara',
+            ];
+            const result = {
+              labels: months,
+              datasets: [
+                {
+                  data: [],
+                  color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+                },
+                {
+                  data: [],
+                  color: (opacity = 1) => `rgba(65, 134, 244, ${opacity})`,
+                },
+              ],
+              legend: ['Sayfa', 'Saat'],
+            };
+
+            for (let index = 0; index < months.length; index++) {
+              const element = values.rows.item(index) ?? {};
+              if (element.months * 1 === index + 1) {
+                result.datasets[0].data.push(element.pageSum);
+                result.datasets[1].data.push(element.timeSum);
+              } else {
+                result.datasets[0].data.push(0);
+                result.datasets[1].data.push(0);
+              }
+            }
+
+            resolve(result);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
+
+  getMonthlyReadingVelocity() {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          `SELECT CAST(SUM(readPage) AS float) / NULLIF(SUM(readTime), 1) AS velocity, 
+          STRFTIME('%m',readDate) AS months FROM History GROUP BY months`,
+        )
+          .then(([values]) => {
+            const months = [
+              'Oca',
+              'Şub',
+              'Mar',
+              'Nis',
+              'May',
+              'Haz',
+              'Tem',
+              'Ağu',
+              'Eyl',
+              'Eki',
+              'Kas',
+              'Ara',
+            ];
+            const result = {
+              labels: months,
+              datasets: [
+                {
+                  data: [],
+                  color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+                },
+              ],
+              legend: ['Hız Sayfa / Dakika'],
+            };
+
+            for (let index = 0; index < months.length; index++) {
+              const element = values.rows.item(index) ?? {};
+              if (element.months * 1 === index + 1) {
+                result.datasets[0].data.push(element.velocity);
+              } else {
+                result.datasets[0].data.push(0);
+              }
+            }
+
+            resolve(result);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
+
   getYearlyReading() {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
         db.executeSql(
-          `SELECT SUM(readPage) AS count ,STRFTIME('%Y',readDate) AS years FROM History GROUP BY years`,
+          `SELECT COUNT(*) AS count ,STRFTIME('%Y',readDate) AS years FROM History GROUP BY years`,
         )
           .then(([values]) => {
             const result = {labels: [], datasets: [{data: []}]};
@@ -737,6 +845,65 @@ export class BaseManager {
             for (let index = 0; index < values.rows.length; index++) {
               const element = values.rows.item(index);
               result.datasets[0].data.push(element.count);
+              result.labels.push(element.years);
+            }
+
+            resolve(result);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
+
+  getYearlyReadingPageAndTime() {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          `SELECT SUM(readPage) AS pageSum, SUM(readTime) AS timeSum, 
+          STRFTIME('%Y',readDate) AS years FROM History GROUP BY years`,
+        )
+          .then(([values]) => {
+            const result = {labels: [], datasets: [{data: []}]};
+
+            for (let index = 0; index < values.rows.length; index++) {
+              const element = values.rows.item(index);
+              result.datasets[0].data.push(element.pageSum);
+              result.labels.push(element.years);
+            }
+
+            resolve(result);
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  }
+
+  getYearlyReadingVelocity() {
+    return new Promise((resolve, reject) => {
+      this.openDatabase().then(db => {
+        db.executeSql(
+          `SELECT CAST(SUM(readPage) AS float) / NULLIF(SUM(readTime), 1) AS velocity, 
+          STRFTIME('%Y',readDate) AS years FROM History GROUP BY years`,
+        )
+          .then(([values]) => {
+            const result = {
+              labels: [],
+              datasets: [
+                {
+                  data: [],
+                  color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+                },
+              ],
+              legend: ['Hız Sayfa / Dakika'],
+            };
+
+            for (let index = 0; index < values.rows.length; index++) {
+              const element = values.rows.item(index);
+              result.datasets[0].data.push(element.velocity);
               result.labels.push(element.years);
             }
 

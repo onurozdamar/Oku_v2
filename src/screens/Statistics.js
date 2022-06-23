@@ -19,13 +19,29 @@ const Statistics = ({navigation}) => {
         headerText={'Haftalık Okuma Hızı'}
         path={'getWeeklyReadingVelocity'}
       />
-      <MyLineChart
-        headerText={'Aylık Okunan Sayfa'}
+      <MyBarChart
+        headerText={'Aylık Okuma Sayısı'}
         path={'getMonthlyReading'}
       />
       <MyLineChart
-        headerText={'Yıllık Okunan Sayfa'}
+        headerText={'Aylık Okuma'}
+        path={'getMonthlyReadingPageAndTime'}
+      />
+      <MyLineChart
+        headerText={'Aylık Okuma Hızı'}
+        path={'getMonthlyReadingVelocity'}
+      />
+      <MyBarChart
+        headerText={'Yıllık Okuma Sayısı'}
         path={'getYearlyReading'}
+      />
+      <MyLineChart
+        headerText={'Yıllık Okuma'}
+        path={'getYearlyReadingPageAndTime'}
+      />
+      <MyLineChart
+        headerText={'Yıllık Okuma Hızı'}
+        path={'getYearlyReadingVelocity'}
       />
       <MyPieChart
         headerText={'Yazarların Kitap Sayısı'}

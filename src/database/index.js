@@ -578,19 +578,19 @@ export class BaseManager {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
         db.executeSql(
-          `SELECT COUNT(*) AS count ,STRFTIME('%w',readDate) AS days FROM History GROUP BY days`,
+          `SELECT COUNT(*) AS count ,STRFTIME('%w',readDate) AS days
+           FROM History GROUP BY days ORDER BY days`,
         )
           .then(([values]) => {
             const days = ['Paz', 'Pts', 'Sal', 'Çar', 'Per', 'Cum', 'Cts'];
-            const result = {labels: days, datasets: [{data: []}]};
+            const result = {
+              labels: days,
+              datasets: [{data: [0, 0, 0, 0, 0, 0, 0]}],
+            };
 
-            for (let index = 0; index < days.length; index++) {
-              const element = values.rows.item(index) ?? {};
-              if (element.days == index) {
-                result.datasets[0].data.push(element.count);
-              } else {
-                result.datasets[0].data.push(0);
-              }
+            for (let index = 0; index < values.rows.length; index++) {
+              const element = values.rows.item(index);
+              result.datasets[0].data[element.days * 1] += element.count;
             }
 
             resolve(result);
@@ -615,26 +615,21 @@ export class BaseManager {
               labels: days,
               datasets: [
                 {
-                  data: [],
+                  data: [0, 0, 0, 0, 0, 0, 0],
                   color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
                 },
                 {
-                  data: [],
+                  data: [0, 0, 0, 0, 0, 0, 0],
                   color: (opacity = 1) => `rgba(65, 134, 244, ${opacity})`,
                 },
               ],
               legend: ['Sayfa', 'Saat'],
             };
 
-            for (let index = 0; index < days.length; index++) {
-              const element = values.rows.item(index) ?? {};
-              if (element.days == index) {
-                result.datasets[0].data.push(element.pageSum);
-                result.datasets[1].data.push(element.timeSum);
-              } else {
-                result.datasets[0].data.push(0);
-                result.datasets[1].data.push(0);
-              }
+            for (let index = 0; index < values.rows.length; index++) {
+              const element = values.rows.item(index);
+              result.datasets[0].data[element.days * 1] += element.pageSum;
+              result.datasets[1].data[element.days * 1] += element.timeSum;
             }
 
             resolve(result);
@@ -659,20 +654,16 @@ export class BaseManager {
               labels: days,
               datasets: [
                 {
-                  data: [],
+                  data: [0, 0, 0, 0, 0, 0, 0],
                   color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
                 },
               ],
               legend: ['Hız Sayfa / Dakika'],
             };
 
-            for (let index = 0; index < days.length; index++) {
-              const element = values.rows.item(index) ?? {};
-              if (element.days == index) {
-                result.datasets[0].data.push(element.velocity);
-              } else {
-                result.datasets[0].data.push(0);
-              }
+            for (let index = 0; index < values.rows.length; index++) {
+              const element = values.rows.item(index);
+              result.datasets[0].data[element.days * 1] += element.velocity;
             }
 
             resolve(result);
@@ -688,7 +679,8 @@ export class BaseManager {
     return new Promise((resolve, reject) => {
       this.openDatabase().then(db => {
         db.executeSql(
-          `SELECT COUNT(*) AS count ,STRFTIME('%m',readDate) AS months FROM History GROUP BY months`,
+          `SELECT COUNT(*) AS count ,STRFTIME('%m',readDate) AS months
+           FROM History GROUP BY months ORDER BY months`,
         )
           .then(([values]) => {
             const months = [
@@ -705,15 +697,14 @@ export class BaseManager {
               'Kas',
               'Ara',
             ];
-            const result = {labels: months, datasets: [{data: []}]};
+            const result = {
+              labels: months,
+              datasets: [{data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}],
+            };
 
-            for (let index = 0; index < months.length; index++) {
-              const element = values.rows.item(index) ?? {};
-              if (element.months * 1 === index + 1) {
-                result.datasets[0].data.push(element.count);
-              } else {
-                result.datasets[0].data.push(0);
-              }
+            for (let index = 0; index < values.rows.length; index++) {
+              const element = values.rows.item(index);
+              result.datasets[0].data[element.months * 1 - 1] += element.count;
             }
 
             resolve(result);
@@ -730,7 +721,7 @@ export class BaseManager {
       this.openDatabase().then(db => {
         db.executeSql(
           `SELECT SUM(readPage) AS pageSum, SUM(readTime) AS timeSum, 
-          STRFTIME('%m',readDate) AS months FROM History GROUP BY months`,
+          STRFTIME('%m',readDate) AS months FROM History GROUP BY months ORDER BY months`,
         )
           .then(([values]) => {
             const months = [
@@ -751,26 +742,23 @@ export class BaseManager {
               labels: months,
               datasets: [
                 {
-                  data: [],
+                  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                   color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
                 },
                 {
-                  data: [],
+                  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                   color: (opacity = 1) => `rgba(65, 134, 244, ${opacity})`,
                 },
               ],
               legend: ['Sayfa', 'Saat'],
             };
 
-            for (let index = 0; index < months.length; index++) {
+            for (let index = 0; index < values.rows.length; index++) {
               const element = values.rows.item(index) ?? {};
-              if (element.months * 1 === index + 1) {
-                result.datasets[0].data.push(element.pageSum);
-                result.datasets[1].data.push(element.timeSum);
-              } else {
-                result.datasets[0].data.push(0);
-                result.datasets[1].data.push(0);
-              }
+              result.datasets[0].data[element.months * 1 - 1] +=
+                element.pageSum;
+              result.datasets[1].data[element.months * 1 - 1] +=
+                element.timeSum;
             }
 
             resolve(result);
@@ -787,7 +775,7 @@ export class BaseManager {
       this.openDatabase().then(db => {
         db.executeSql(
           `SELECT CAST(SUM(readPage) AS float) / NULLIF(SUM(readTime), 1) AS velocity, 
-          STRFTIME('%m',readDate) AS months FROM History GROUP BY months`,
+          STRFTIME('%m',readDate) AS months FROM History GROUP BY months ORDER BY months`,
         )
           .then(([values]) => {
             const months = [
@@ -808,7 +796,7 @@ export class BaseManager {
               labels: months,
               datasets: [
                 {
-                  data: [],
+                  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                   color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
                 },
               ],
@@ -817,11 +805,8 @@ export class BaseManager {
 
             for (let index = 0; index < months.length; index++) {
               const element = values.rows.item(index) ?? {};
-              if (element.months * 1 === index + 1) {
-                result.datasets[0].data.push(element.velocity);
-              } else {
-                result.datasets[0].data.push(0);
-              }
+              result.datasets[0].data[element.months * 1 - 1] +=
+                element.velocity;
             }
 
             resolve(result);

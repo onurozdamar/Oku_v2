@@ -655,7 +655,7 @@ export class BaseManager {
               datasets: [
                 {
                   data: [0, 0, 0, 0, 0, 0, 0],
-                  color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+                  color: (opacity = 1) => `rgba(65, 244, 135, ${opacity})`,
                 },
               ],
               legend: ['Hız Sayfa / Dakika'],
@@ -797,7 +797,7 @@ export class BaseManager {
               datasets: [
                 {
                   data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                  color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+                  color: (opacity = 1) => `rgba(65, 244, 135, ${opacity})`,
                 },
               ],
               legend: ['Hız Sayfa / Dakika'],
@@ -850,11 +850,25 @@ export class BaseManager {
           STRFTIME('%Y',readDate) AS years FROM History GROUP BY years`,
         )
           .then(([values]) => {
-            const result = {labels: [], datasets: [{data: []}]};
+            const result = {
+              labels: [],
+              datasets: [
+                {
+                  data: [],
+                  color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+                },
+                {
+                  data: [],
+                  color: (opacity = 1) => `rgba(65, 134, 244, ${opacity})`,
+                },
+              ],
+              legend: ['Sayfa', 'Saat'],
+            };
 
             for (let index = 0; index < values.rows.length; index++) {
               const element = values.rows.item(index);
               result.datasets[0].data.push(element.pageSum);
+              result.datasets[1].data.push(element.timeSum);
               result.labels.push(element.years);
             }
 
@@ -880,7 +894,7 @@ export class BaseManager {
               datasets: [
                 {
                   data: [],
-                  color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+                  color: (opacity = 1) => `rgba(65, 244, 135, ${opacity})`,
                 },
               ],
               legend: ['Hız Sayfa / Dakika'],

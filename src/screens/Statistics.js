@@ -3,8 +3,11 @@ import {ScrollView, StyleSheet} from 'react-native';
 import MyBarChart from '../components/Chart/MyBarChart';
 import MyLineChart from '../components/Chart/MyLineChart';
 import MyPieChart from '../components/Chart/MyPieChart';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
-const Statistics = ({navigation}) => {
+const Tab = createMaterialTopTabNavigator();
+
+const WeekStatistics = () => {
   return (
     <ScrollView style={styles.container}>
       <MyBarChart
@@ -19,6 +22,13 @@ const Statistics = ({navigation}) => {
         headerText={'Haftalık Okuma Hızı'}
         path={'getWeeklyReadingVelocity'}
       />
+    </ScrollView>
+  );
+};
+
+const MonthStatistics = () => {
+  return (
+    <ScrollView style={styles.container}>
       <MyBarChart
         headerText={'Aylık Okuma Sayısı'}
         path={'getMonthlyReading'}
@@ -31,6 +41,13 @@ const Statistics = ({navigation}) => {
         headerText={'Aylık Okuma Hızı'}
         path={'getMonthlyReadingVelocity'}
       />
+    </ScrollView>
+  );
+};
+
+const YearStatistics = () => {
+  return (
+    <ScrollView style={styles.container}>
       <MyBarChart
         headerText={'Yıllık Okuma Sayısı'}
         path={'getYearlyReading'}
@@ -43,6 +60,13 @@ const Statistics = ({navigation}) => {
         headerText={'Yıllık Okuma Hızı'}
         path={'getYearlyReadingVelocity'}
       />
+    </ScrollView>
+  );
+};
+
+const AuthorStatistics = () => {
+  return (
+    <ScrollView style={styles.container}>
       <MyPieChart
         headerText={'Yazarların Kitap Sayısı'}
         path={'getAuthorsBooksCount'}
@@ -54,6 +78,17 @@ const Statistics = ({navigation}) => {
         accessor={'sum'}
       />
     </ScrollView>
+  );
+};
+
+const Statistics = ({navigation}) => {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Haftalık" component={WeekStatistics} />
+      <Tab.Screen name="Aylık" component={MonthStatistics} />
+      <Tab.Screen name="Yıllık" component={YearStatistics} />
+      <Tab.Screen name="Yazar" component={AuthorStatistics} />
+    </Tab.Navigator>
   );
 };
 

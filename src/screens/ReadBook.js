@@ -45,10 +45,6 @@ const ReadBook = ({navigation, route}) => {
       .integer('Bu alan tam sayı olmalıdır.'),
   });
 
-  function r(s, e) {
-    return s + Math.floor(Math.random() * (e - s));
-  }
-
   return (
     <ScrollView style={styles.container}>
       <View style={styles.book}>
@@ -61,28 +57,24 @@ const ReadBook = ({navigation, route}) => {
       <View style={styles.form}>
         <Formik
           initialValues={{
-            readPage: '',
+            readPage: book?.type === 'etkinlik' ? '1' : '',
             desc: '',
           }}
           onSubmit={(values, {resetForm}) => {
-            for (let index = 0; index < 10; index++) {
-              console.log('s');
-              const rp = r(5, 50);
-              const rd = new Date(r(2015, 2022), r(0, 11), r(1, 31));
-              rd.setHours(r(0, 24));
-              rd.setMinutes(r(0, 60));
-              manager.addHistory({
-                ...values,
-                readPage: rp,
-                readDate: rd,
-                readTime: r(10, 60),
-                bookId: book.bookId,
-              });
-              manager.updateBookPage(book.bookId, book.currentPage + rp);
-              manager.getBookById(book.bookId).then(res => {
-                updateBook(res);
-              });
-            }
+            manager.addHistory({
+              ...values,
+              readPage: values.readPage * 1,
+              readDate: new Date(),
+              readTime: 50,
+              bookId: book.bookId,
+            });
+            manager.updateBookPage(
+              book.bookId,
+              book.currentPage + values.readPage * 1,
+            );
+            manager.getBookById(book.bookId).then(res => {
+              updateBook(res);
+            });
 
             resetForm();
           }}
@@ -97,13 +89,15 @@ const ReadBook = ({navigation, route}) => {
             isValid,
           }) => (
             <View>
-              <MyTextInput
-                label={'Okunan Sayfa'}
-                value={values.readPage}
-                onBlur={handleBlur('readPage')}
-                onChangeText={handleChange('readPage')}
-                error={errors.readPage}
-              />
+              {book?.type !== 'etkinlik' && (
+                <MyTextInput
+                  label={'Okunan Sayfa'}
+                  value={values.readPage}
+                  onBlur={handleBlur('readPage')}
+                  onChangeText={handleChange('readPage')}
+                  error={errors.readPage}
+                />
+              )}
               <MyTextInput
                 label={'Açıklama'}
                 value={values.desc}
